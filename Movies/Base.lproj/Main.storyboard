@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BVf-eu-XIu">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Populat Movies-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="Movies" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="0FL-TT-mnK">
+                                <rect key="frame" x="10" y="183" width="373" height="625"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMovieCell" id="DQB-6h-XS5" customClass="MainMovieCell" customModule="Movies" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="373" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DQB-6h-XS5" id="Ygc-WH-V3K">
+                                            <rect key="frame" x="0.0" y="0.0" width="373" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <searchBar contentMode="redraw" placeholder="Search" translatesAutoresizingMaskIntoConstraints="NO" id="uJs-at-dfy">
+                                <rect key="frame" x="0.0" y="113" width="393" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="9mE-J7-pQi"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="eES-Bn-kOz"/>
+                                </connections>
+                            </searchBar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="uJs-at-dfy" firstAttribute="centerX" secondItem="0FL-TT-mnK" secondAttribute="centerX" id="5QO-kN-hrl"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="0FL-TT-mnK" secondAttribute="trailing" constant="10" id="DPa-2m-qJI"/>
+                            <constraint firstItem="uJs-at-dfy" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="EYv-0E-EsH"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="0FL-TT-mnK" secondAttribute="bottom" constant="10" id="Qzi-fm-iZo"/>
+                            <constraint firstItem="uJs-at-dfy" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="SbY-9L-GoB"/>
+                            <constraint firstItem="0FL-TT-mnK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="jDG-Fk-HXq"/>
+                            <constraint firstItem="0FL-TT-mnK" firstAttribute="top" secondItem="uJs-at-dfy" secondAttribute="bottom" constant="10" id="uHI-Az-pbD"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Populat Movies" id="NJ0-Wz-M5P">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="line.3.horizontal.decrease.circle" catalog="system" id="hbS-u5-Rfs">
+                            <connections>
+                                <action selector="tapSort:" destination="BYZ-38-t0r" id="bdg-d2-PHU"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="uJs-at-dfy" id="jgf-U8-ehh"/>
+                        <outlet property="tableView" destination="0FL-TT-mnK" id="bdS-iY-A9B"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1028.2442748091603" y="3.5211267605633805"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="jFI-Kf-lwq">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="BVf-eu-XIu" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Txl-Re-UKB">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="fWg-1f-p0R"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nEB-MX-f5L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="101.5267175572519" y="3.5211267605633805"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="line.3.horizontal.decrease.circle" catalog="system" width="128" height="123"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
