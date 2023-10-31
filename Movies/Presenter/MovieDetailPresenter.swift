@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 
-protocol VideoPresenterDelegate: AnyObject {
-    func showVideo(video: Video)
+protocol ImagePresenterDelegate: AnyObject {
+    func getImages(names: [String])
 }
 
 class MovieDetailPresenter {
-    weak var delegate: VideoPresenterDelegate?
+    weak var delegate: ImagePresenterDelegate?
     weak var videoRouter: VideoRouting?
     weak var errorHandler: ErrorHandlerProtocol?
     
@@ -21,8 +21,6 @@ class MovieDetailPresenter {
         "accept": "application/json",
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkOGNiYWNkMGQzZDA2NjYyMzUxM2EwZGIzYTkxYmU4MSIsInN1YiI6IjY1MmZlYzgyMDI0ZWM4MDBjNzc2OGZiNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vNlj8Llox6PYxa8mgso0Y90-R7Xjve-QYx_NNC4QSRc"
       ]
-    
-    var images = [String]()
     
     func getVideo(id: Int) {
         fetchVideo(id: id) { [weak self] detail in
@@ -32,8 +30,15 @@ class MovieDetailPresenter {
         }
     }
     
-    func getImages(id: String) {
-        
+    func getImages(id: Int) {
+        fetchImages(id: id) { [weak self] names in
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.getImages(names: names)
+            }
+        }
+    }
+    
+    private func fetchImages(id: Int, completion: (([String])->())?) {
         let request = NSMutableURLRequest(url: NSURL(string: "https://api.themoviedb.org/3/movie/\(id)/images")! as URL,
                                                 cachePolicy: .useProtocolCachePolicy,
                                             timeoutInterval: 10.0)
@@ -48,14 +53,46 @@ class MovieDetailPresenter {
               guard let self, let data else { return }
               do {
                   let images = try JSONDecoder().decode(ImageMovieDetails.self, from: data)
+                  let posterNames: [String] = images.posters.compactMap{ $0.filePath }
+                  
+                  let maxPosters = posterNames.count > 9 ? 9 : (posterNames.count - 1)
+                  var maxPosterNames = [String]()
+                  for item in (0...maxPosters) {
+                      downloadImages(path: posterNames[item])
+                      maxPosterNames.append(posterNames[item])
+                  }
+                  completion?(maxPosterNames)
               }
-              
               catch {
                   self.errorHandler?.showErrorAlert(title: "Error", message: "\(error.localizedDescription) - \(#function)", dismissCompletion: nil)
               }
           }
         })
 
+        dataTask.resume()
+    }
+    
+    private func downloadImages(path: String) {
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w500" + path) else { return }
+        let request = URLRequest(url: url)
+        let dataTask = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) -> Void in
+            guard let self,
+                  let data,
+                  error == nil,
+                  let imageName = path.components(separatedBy: ".").first?.components(separatedBy: "/").last
+            else {
+                self?.errorHandler?.showErrorAlert(title: "Error", message: "\(error?.localizedDescription ?? "") - \(#function)", dismissCompletion: nil)
+                return
+            }
+            let fileName = getDocumentsDirectory().appendingPathExtension("\(imageName).png")
+            do {
+                if !FileManager.default.fileExists(atPath: fileName.path) {
+                    try data.write(to: fileName)
+                }
+            } catch {
+                self.errorHandler?.showErrorAlert(title: "Error", message: "\(error.localizedDescription) - \(#function)", dismissCompletion: nil)
+            }
+        }
         dataTask.resume()
     }
     
@@ -94,5 +131,10 @@ class MovieDetailPresenter {
             link = "https://vimeo.com/" + key
         }
         return URL(string: link)
+    }
+    
+    private func getDocumentsDirectory() -> URL {
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return path[0]
     }
 }

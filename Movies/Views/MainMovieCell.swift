@@ -51,9 +51,9 @@ class MainMovieCell: UITableViewCell {
     }
     
     private func prepareBackground(movie: MovieCellModel) {
-        guard let first = movie.imageName.components(separatedBy: ".").first,
-              let second = first.components(separatedBy: "/").last else { return }
-        let imageName = "." + second + ".png"
+        guard let firstPart = movie.imageName.components(separatedBy: ".").first,
+              let lastPart = firstPart.components(separatedBy: "/").last else { return }
+        let imageName = "." + lastPart + ".png"
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first,
            let image = UIImage(contentsOfFile: path + imageName) {
             backgroundImage = UIImageView(image: image)

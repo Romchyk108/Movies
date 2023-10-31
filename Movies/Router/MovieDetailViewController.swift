@@ -20,8 +20,11 @@ class MovieDetailViewController: UIViewController {
     private let descriptionLabel = UILabel()
     private let container = UIView()
     private let scrollView = UIScrollView()
+    private var imagesCollection: UICollectionView?
     
-    var videoPresenter: MovieDetailPresenter?
+    private var imageNames = [String]()
+    
+    var detailPresenter: MovieDetailPresenter?
     var videoRouter: VideoRouter?
     var imageRouter: ImageRouter?
     
@@ -42,13 +45,14 @@ class MovieDetailViewController: UIViewController {
         videoRouter = VideoRouter(viewController: self)
         imageRouter = ImageRouter(viewController: self)
         
-        videoPresenter = MovieDetailPresenter()
-        videoPresenter?.delegate = self
-        videoPresenter?.videoRouter = videoRouter
-        videoPresenter?.errorHandler = self
+        detailPresenter = MovieDetailPresenter()
+        detailPresenter?.delegate = self
+        detailPresenter?.videoRouter = videoRouter
+        detailPresenter?.errorHandler = self
+        detailPresenter?.getImages(id: model.id)
 
         view.backgroundColor = .white
-        setupImage()
+        setupCollection()
         setupNameLabel()
         setupCountryWithYearLabel()
         setupGenresLabel()
@@ -58,6 +62,7 @@ class MovieDetailViewController: UIViewController {
         
         setupScrollView()
         setupContainer()
+        imagesCollection?.reloadData()
     }
 
     private func setupScrollView() {
@@ -76,6 +81,26 @@ class MovieDetailViewController: UIViewController {
             make.top.bottom.equalTo(scrollView)
             make.trailing.leading.equalTo(view)
         }
+    }
+    
+    private func setupCollection() {
+        let layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: ImageCollectionCell.widthCell, height: Constants.heightImage)
+        layout.scrollDirection = .horizontal
+        
+        imagesCollection = UICollectionView(frame: CGRect(), collectionViewLayout: layout)
+        guard let imagesCollection else { return }
+        imagesCollection.register(ImageCollectionCell.self, forCellWithReuseIdentifier: ImageCollectionCell.reuseIdentifier)
+        imagesCollection.dataSource = self
+        imagesCollection.delegate = self
+        
+        container.addSubview(imagesCollection)
+        imagesCollection.snp.makeConstraints { make in
+            make.top.leading.trailing.equalTo(container)
+            make.height.equalTo(Constants.heightImage)
+        }
+        self.imagesCollection = imagesCollection
     }
     
     private func setupDescriptionLabel() {
@@ -103,11 +128,11 @@ class MovieDetailViewController: UIViewController {
     }
     
     @objc private func tappedTrailerButton() {
-        videoPresenter?.getVideo(id: model.id)
+        detailPresenter?.getVideo(id: model.id)
     }
     
-    @objc private func presentImage() {
-        imageRouter?.showImage(imageName: model.posterPath)
+    @objc private func presentImage(poster: String) {
+        imageRouter?.showImage(imageName: poster)
     }
     
     private func setupRatingLabel() {
@@ -147,28 +172,12 @@ class MovieDetailViewController: UIViewController {
         container.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(container).offset(Constants.horizontalSpacing)
-            make.top.equalTo(imageView.snp.bottom).offset(Constants.verticalSpacing)
+            if let imagesCollection {
+                make.top.equalTo(imagesCollection.snp.bottom).offset(Constants.verticalSpacing)
+            } else {
+                make.top.equalToSuperview().offset(Constants.verticalSpacing)
+            }
             make.trailing.equalTo(container).offset(-Constants.horizontalSpacing)
-        }
-    }
-    
-    private func setupImage() {
-        guard let first = model.posterPath.components(separatedBy: ".").first,
-              let second = first.components(separatedBy: "/").last else { return }
-        let imageName = "." + second + ".png"
-        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first,
-           let image = UIImage(contentsOfFile: path + imageName) {
-            imageView = UIImageView(image: image)
-            imageView.isUserInteractionEnabled = true
-            let gesture = UITapGestureRecognizer(target: self, action: #selector(presentImage))
-            imageView.addGestureRecognizer(gesture)
-        } else {
-            imageView = UIImageView(image: UIImage(systemName: "photo"))
-        }
-        container.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(container)
-            make.height.equalTo(Constants.heightImage)
         }
     }
     
@@ -192,9 +201,10 @@ class MovieDetailViewController: UIViewController {
     }
 }
 
-extension MovieDetailViewController: VideoPresenterDelegate {
-    func showVideo(video: Video) {
-        
+extension MovieDetailViewController: ImagePresenterDelegate {
+    func getImages(names: [String]) {
+        self.imageNames = names
+        imagesCollection?.reloadData()
     }
 }
 
@@ -213,5 +223,27 @@ extension MovieDetailViewController: ErrorHandlerProtocol {
                 self?.present(alert, animated: true)
             }
         }
+    }
+}
+
+extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return imageNames.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionCell.reuseIdentifier, for: indexPath) as? ImageCollectionCell else {
+            return UICollectionViewCell()
+        }
+        cell.config(imageName: imageNames[indexPath.row])
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presentImage(poster: imageNames[indexPath.row])
     }
 }

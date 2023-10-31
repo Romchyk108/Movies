@@ -34,6 +34,7 @@
 		8DABFFEA2AE2B97600F564A2 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABFFE92AE2B97600F564A2 /* Country.swift */; };
 		8DABFFEC2AE2C57500F564A2 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABFFEB2AE2C57500F564A2 /* MovieDetail.swift */; };
 		8DABFFEE2AE4090E00F564A2 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DABFFED2AE4090E00F564A2 /* Spinner.swift */; };
+		8DD11F372AF041AA0061572B /* ImageCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD11F362AF041AA0061572B /* ImageCollectionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		8DABFFE92AE2B97600F564A2 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		8DABFFEB2AE2C57500F564A2 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		8DABFFED2AE4090E00F564A2 /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
+		8DD11F362AF041AA0061572B /* ImageCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionCell.swift; sourceTree = "<group>"; };
 		E831A46B90ACD9C19C519226 /* Pods-Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Movies.debug.xcconfig"; path = "Target Support Files/Pods-Movies/Pods-Movies.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				8DAB00132AE4457D00F564A2 /* MovieDetailViewController.swift */,
+				8DD11F362AF041AA0061572B /* ImageCollectionCell.swift */,
 				8DAB00252AE8439600F564A2 /* ImageViewController.swift */,
 				8DAB00192AE6EA6400F564A2 /* PlayerViewController.swift */,
 				8DABFF8F2ADF0A3600F564A2 /* MainViewController.swift */,
@@ -322,6 +325,7 @@
 				8DAB001E2AE6F13A00F564A2 /* MovieDetailPresenter.swift in Sources */,
 				8DABFFDF2AE2848300F564A2 /* Extensions.swift in Sources */,
 				8DAB00242AE8434A00F564A2 /* ImageRouter.swift in Sources */,
+				8DD11F372AF041AA0061572B /* ImageCollectionCell.swift in Sources */,
 				8DABFF8E2ADF0A3600F564A2 /* SceneDelegate.swift in Sources */,
 				8DABFFA12ADF11F000F564A2 /* MainMovieCell.swift in Sources */,
 				8DAB00122AE4413600F564A2 /* DetailViewRouter.swift in Sources */,
